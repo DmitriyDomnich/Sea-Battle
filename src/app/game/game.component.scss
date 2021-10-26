@@ -1,0 +1,27 @@
+@media (orientation:landscape) {
+  #wrapper {
+    width: 100vw;
+    // height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  h2 {
+    font-style: italic;
+    display: none;
+  }
+}
+
+@media (orientation: portrait) {
+  h2 {
+    font-style: italic !important;
+    display: block;
+    color: lightgray;
+    text-align: center;
+  }
+
+  #wrapper {
+    display: none;
+  }
+}

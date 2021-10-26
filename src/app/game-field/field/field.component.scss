@@ -1,0 +1,27 @@
+.field {
+  width: 40vw;
+  height: 80vh;
+  background-color: #E0B7B7;
+  position: relative;
+  margin: 0 2em;
+  box-shadow: 0 0 10px 5px #F7A1C4;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -2em;
+
+  *:nth-child(10n) {
+    border-right: none;
+  }
+
+  *:nth-child(10n + 1) {
+    border-left: none;
+  }
+
+  *:nth-child(-n + 10) {
+    border-top: none;
+  }
+
+  *:nth-last-child(-n + 10) {
+    border-bottom: none;
+  }
+}

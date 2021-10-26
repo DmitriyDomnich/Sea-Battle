@@ -1,1 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+.cross {
+  background-color: red;
+  width: 10%;
+  border-radius: 15px;
+  height: 100%;
+  position: absolute;
+}
+
+.wave {
+  font-size: 200%;
+  position: absolute;
+  color: #85DAFF;
+  opacity: 0;
+  animation: appear .6s ease-in forwards;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.sea {
+  transition: background-color 1s ease-in !important;
+  background-color: #0D2C54 !important;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('./assets/images/zoltan-tasi-sJGvoX_eVhw-unsplash.jpg');
+}

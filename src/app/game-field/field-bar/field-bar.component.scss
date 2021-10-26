@@ -1,0 +1,17 @@
+:host {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 10%;
+  height: 10%;
+  border: 2px solid #94BFA7;
+  transition: all .3s ease-out;
+  user-select: none;
+  position: relative;
+}
+
+:host:hover {
+  background-color: #F7A1C4;
+}

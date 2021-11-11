@@ -7,24 +7,40 @@
   @include display-flex();
 }
 
-img {
-  cursor: pointer;
-  height: 30%;
-  width: 40%;
-  z-index: 1;
-}
+@include field-borders();
 
-section {
+.wrapper {
   width: 40%;
   height: 90%;
   border-radius: 20px;
-  background-color: #E0B7B7;
+  background-color: #EDD4D4;
   position: relative;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
-section::before {
+button {
+  color: #191919;
+  font-size: 24px;
+  height: 100%;
+  background-color: #ccc;
+}
+
+sea-field * {
+  z-index: 5;
+  text-overflow: ellipsis;
+}
+
+.wrapper * {
+  margin-left: 10%;
+  height: fit-content;
+  z-index: 1;
+}
+
+.wrapper::before {
   content: 'Configure your field';
   font-family: 'Pacifico', cursive !important;
   color: #94BFA7;

@@ -9,7 +9,7 @@ export class CrossDirective {
   private _clicked = false;
 
   @HostListener('click') onClick() {
-    if (!this._clicked) {
+    if (!this._clicked && this.result !== undefined) {
       if (this.result) {
         this.el.nativeElement.append(...this.getCross());
       } else {
@@ -19,7 +19,13 @@ export class CrossDirective {
       this._clicked = true;
     }
   }
-
+  @HostListener('mouseenter') onHover() {
+    this.el.nativeElement.style.backgroundColor = '#F7A1C4'
+    this.el.nativeElement.style.cursor = 'pointer';
+  }
+  @HostListener('mouseleave') onLeave() {
+    this.el.nativeElement.style.backgroundColor = 'transparent';
+  }
   constructor(
     private el: ElementRef<HTMLDivElement>,
     private renderer: Renderer2

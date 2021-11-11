@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FieldComponent } from './field/field.component';
 import { FieldBarComponent } from './field-bar/field-bar.component';
 import { MatRippleModule } from '@angular/material/core';
-import { CrossDirective } from './crossed.directive';
+import { CrossDirective } from './cross.directive';
 
 
 @NgModule({
@@ -12,6 +12,6 @@ import { CrossDirective } from './crossed.directive';
     CommonModule,
     MatRippleModule
   ],
-  exports: [FieldComponent]
+  exports: [FieldComponent, FieldBarComponent, CrossDirective]
 })
 export class GameFieldModule { }

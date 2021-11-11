@@ -3,3 +3,21 @@
   justify-content: center;
   align-items: center;
 }
+
+@mixin field-borders {
+  *:nth-child(10n) {
+    border-right: none;
+  }
+
+  *:nth-child(10n + 1) {
+    border-left: none;
+  }
+
+  *:nth-child(-n + 10) {
+    border-top: none;
+  }
+
+  *:nth-last-child(-n + 10) {
+    border-bottom: none;
+  }
+}

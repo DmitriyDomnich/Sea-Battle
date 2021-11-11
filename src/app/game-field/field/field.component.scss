@@ -1,4 +1,6 @@
-.field {
+@use 'mixins'as *;
+
+:host {
   width: 40vw;
   height: 80vh;
   background-color: #E0B7B7;
@@ -9,19 +11,9 @@
   flex-wrap: wrap;
   margin-top: -2em;
 
-  *:nth-child(10n) {
-    border-right: none;
+  * {
+    position: static;
   }
 
-  *:nth-child(10n + 1) {
-    border-left: none;
-  }
 
-  *:nth-child(-n + 10) {
-    border-top: none;
-  }
-
-  *:nth-last-child(-n + 10) {
-    border-bottom: none;
-  }
 }

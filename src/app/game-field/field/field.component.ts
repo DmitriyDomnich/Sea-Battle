@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Bar } from '../../models/bar';
 
 @Component({
@@ -8,9 +8,9 @@ import { Bar } from '../../models/bar';
 })
 export class FieldComponent implements OnInit {
 
-  public bars: Bar[] = new Array<Bar>(100);
-
-  constructor() { }
+  constructor(
+    public elementRef: ElementRef
+  ) { }
 
   ngOnInit(): void {
   }

@@ -1,6 +1,14 @@
 <sea-go-back></sea-go-back>
 <h2 class="mat-display-2">Turn your phone</h2>
 <div id="wrapper">
-    <sea-field></sea-field>
-    <sea-field></sea-field>
+    <sea-field>
+        <ng-container *ngFor='let bar of bars' draggable="false">
+            <sea-field-bar seaCross [result]='true'></sea-field-bar>
+       </ng-container>
+    </sea-field>
+    <sea-field>
+        <ng-container *ngFor='let bar of bars' draggable="false">
+            <sea-field-bar seaCross [result]='false'></sea-field-bar>
+       </ng-container>
+    </sea-field>
 </div>

@@ -1,0 +1,22 @@
+img {
+  z-index: 1;
+  cursor: grab;
+  position: relative;
+}
+
+:host {
+  position: relative;
+  z-index: 5;
+}
+
+mat-icon {
+  position: absolute;
+  top: -1em;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+img:active {
+  cursor: grabbing;
+}

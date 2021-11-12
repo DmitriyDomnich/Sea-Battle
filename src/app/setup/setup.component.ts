@@ -31,8 +31,7 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   public bars: any[] = new Array(100).fill(0);
 
-  constructor(
-    private _renderer: Renderer2,
+  constructor(private _renderer: Renderer2,
     private _fieldInstaller: FieldInstallerService,
     private _gameState: GameStateService,
     private _router: Router,

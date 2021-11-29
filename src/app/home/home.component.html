@@ -3,10 +3,10 @@
     <div class="buttons">
         <button (click)='startNewGame()' mat-flat-button color='primary'>Create a new game</button>
         <mat-form-field>
-            <mat-label>Enter a game code here</mat-label>
-            <input [maxLength]='8' #codeInput autocomplete="off" matInput>
+            <mat-label>Enter a game link here</mat-label>
+            <input [maxLength]="36" #codeInput autocomplete="off" matInput>
         </mat-form-field>
-        <button *ngIf='codeInput.value.length === 8' (click)='joinExistingGame(codeInput.value)' mat-flat-button
-            color='accent'>Join a game</button>
+        <button *ngIf='codeInput.value.length === 8 || codeInput.value.length === 15'
+            (click)='joinExistingGame(codeInput.value)' mat-flat-button color='accent'>Join a game</button>
     </div>
 </div>

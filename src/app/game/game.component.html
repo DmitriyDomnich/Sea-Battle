@@ -1,14 +1,15 @@
 <sea-go-back></sea-go-back>
-<h2 class="mat-display-2">Turn your phone</h2>
 <div id="wrapper">
-    <sea-field>
-        <ng-container *ngFor='let bar of bars' draggable="false">
-            <sea-field-bar seaCross [result]='true'></sea-field-bar>
-       </ng-container>
+    <ng-container *ngIf="isYourTurn">
+        <span class="player-turn">It's your turn.</span>
+    </ng-container>
+    <sea-field #player>
+        <ng-template adBars></ng-template>
     </sea-field>
-    <sea-field>
-        <ng-container *ngFor='let bar of bars' draggable="false">
-            <sea-field-bar seaCross [result]='false'></sea-field-bar>
-       </ng-container>
+    <ng-container *ngIf="!isYourTurn">
+        <span class="enemy-turn">It's enemy's turn.</span>
+    </ng-container>
+    <sea-field #enemy>
+        <ng-template adBars></ng-template>
     </sea-field>
 </div>

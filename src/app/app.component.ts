@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-
+import { SocketIoService } from './core/socket-io.service';
 
 @Component({
   selector: 'app-root',
@@ -9,18 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-
-
   constructor(
-
+    private _socketService: SocketIoService
   ) {
-
   }
 
-  public ngOnInit() {
-
-
-
+  ngOnInit() {
+    this._socketService.registerSocketIoConnection();
   }
-
 }

@@ -1,10 +1,18 @@
 <sea-go-back></sea-go-back>
 <div id="flex-container" cdkDropListGroup>
-    <div class="wrapper" #wrapper cdkDropList cdkDropListSortingDisabled>
-        <ng-container *ngFor='let ship of ships'>
-            <sea-ship (shipFlipped)='flipped($event)' (cdkDragStarted)='dragStart($event)' [shipConfig]='ship'
-                [cdkDragData]='ship' cdkDrag></sea-ship>
-        </ng-container>
+    <div class="configuration-wrapper">
+        <div class="wrapper" #wrapper cdkDropList cdkDropListSortingDisabled>
+            <ng-container *ngFor='let ship of ships'>
+                <sea-ship (shipFlipped)='flipped($event)' (cdkDragStarted)='dragStart($event)' [shipConfig]='ship'
+                    [cdkDragData]='ship' cdkDrag></sea-ship>
+            </ng-container>
+        </div>
+        <button seaShowHideText #copyButton mat-flat-button [cdkCopyToClipboard]="inviteLink">
+            <mat-icon>link</mat-icon> Copy invite link
+        </button>
+        <button (click)='sendFieldConfig()' *ngIf='canSend' mat-flat-button>
+            <mat-icon>videogame_asset</mat-icon> Start a game
+        </button>
     </div>
     <sea-field #field>
         <ng-container *ngFor='let bar of bars'>
@@ -12,5 +20,7 @@
                 (cdkDropListDropped)='drop($event)'></sea-field-bar>
         </ng-container>
     </sea-field>
-    <button (click)='sendFieldConfig()' *ngIf='canSend' mat-raised-button>Start a game</button>
+    <section *ngIf="someoneReady">
+        {{someoneReady}}
+    </section>
 </div>

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+type startGame = string | boolean;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,47 +12,122 @@ export class GameStateService {
     enemy: false,
     you: false
   };
-  private _playerField: any;
-  private _enemyField: any;
-  private _startGame = new Subject<string | number | boolean>();
+  private _gameWasGoing = false;
+  private _playerFieldConfig: any[];
+  private _enemyFieldConfig: any[];
+  private _isYourTurn = false;
+  private _startGame = new Subject<startGame>();
+  private _turnChange = new Subject<boolean>();
+  public turnChange$ = this._turnChange.asObservable();
   public startGame$ = this._startGame.asObservable();
+  public endGame$ = new Subject<string>();
 
-  constructor() { }
-
+  public set isYourTurn(bool: boolean) {
+    this._isYourTurn = bool;
+    this._turnChange.next(bool);
+  }
+  public set gameWasGoing(v: boolean) {
+    this._gameWasGoing = v;
+  }
+  public get gameWasGoing() {
+    return this._gameWasGoing;
+  }
   public set playerField(field: any) {
-    if (!(this._playerField)) {
-      this._playerField = field;
-      this._readyState.you = true;
-      this._setGameStartState('Wait for your enemy to set up.');
+    debugger;
+    if (this._playerFieldConfig) {
+      this._isYourTurn = false;
     } else {
-      this._playerField = field;
-      this._readyState.you = true;
+      if (!this._enemyFieldConfig) {
+        this._isYourTurn = true;
+      }
     }
+    this._playerFieldConfig = field;
+    this._readyState.you = true;
+    this._setGameStartState('Wait for your enemy to set up.');
+    console.log(`player field ${this.isYourTurn}`);
+    // if (!(this._playerFieldConfig)) {
+    //   this._playerFieldConfig = field;
+    //   this._readyState.you = true;
+    //   if (!this._enemyFieldConfig) {
+    //     this._isYourTurn = true;
+    //   }
+    //   this._setGameStartState('Wait for your enemy to set up.');
+    // } else {
+    //   this._playerFieldConfig = field;
+    //   this._readyState.you = true;
+    //   this._isYourTurn = false;
+    // }
+    // console.log(`player turn ${this.isYourTurn}`);
   }
   public set enemyField(field: any) {
+    debugger;
     if (field) {
-      this._enemyField = field;
+      if (this._enemyFieldConfig) {
+        this._isYourTurn = true;
+      } else {
+        if (!this._playerFieldConfig) {
+          this._isYourTurn = false;
+        }
+      }
+
+      this._enemyFieldConfig = field;
       this._readyState.enemy = true;
       this._setGameStartState('Your enemy is waiting for you.');
     } else {
-      this._enemyField = null;
+      this._enemyFieldConfig = null;
       this._readyState.enemy = false;
     }
+    console.log(`enemy field ${this.isYourTurn}`);
+    // if (field) {
+    //   if (this._enemyFieldConfig) { // if enemy field was already provided, player gets the turn
+    //     this._isYourTurn = true;
+    //   }
+    //   if (!this._playerFieldConfig) {
+    //     this._isYourTurn = false;
+    //   }
+    //   this._enemyFieldConfig = field;
+    //   this._readyState.enemy = true;
+    //   this._setGameStartState('Your enemy is waiting for you.');
+    // } else {
+    //   this._enemyFieldConfig = null;
+    //   this._readyState.enemy = false;
+    // }
+    // console.log(`player turn ${this.isYourTurn}`);
+
+  }
+  public get isYourTurn() {
+    return this._isYourTurn;
   }
   public get playerField() {
-    return this._playerField;
+    return this._playerFieldConfig;
   }
   public get enemyField() {
-    return this._enemyField;
+    return this._enemyFieldConfig;
   }
+
   public emitStartGame() {
     this._startGame.next(true);
   }
   public resetState() {
     this._readyState.enemy = false;
     this._readyState.you = false;
-    this._playerField = null;
-    this._enemyField = null;
+    this._playerFieldConfig = null;
+    this._enemyFieldConfig = null;
+    this._gameWasGoing = false;
+    this._isYourTurn = false;
+  }
+  public isGameOver(fieldEl: HTMLElement, target: '_enemyFieldConfig' | '_playerFieldConfig'): void {
+    if (this._allShipsShot(fieldEl.children, target)) {
+      this.endGame$.next(target.includes('enemy') ? 'You won' : 'You lost');
+    }
+    this.endGame$.next('');
+  }
+  private _allShipsShot(fieldChildren: HTMLCollection, target: '_enemyFieldConfig' | '_playerFieldConfig') {
+    const fieldChildrenArr = Array.from(fieldChildren);
+    if (this[target].find(config => fieldChildrenArr[config.index].children.length < 2)) {
+      return false;
+    }
+    return true;
   }
   private _setGameStartState(message: string) {
     this._startGame.next(message);

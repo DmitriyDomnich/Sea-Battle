@@ -1,34 +1,57 @@
 @use 'mixins'as *;
+@use 'variables' as *;
 @import url('https://fonts.googleapis.com/css2?family=Chelsea+Market&family=Pacifico&display=swap');
 
 #flex-container {
+  position: relative;
   width: 100%;
   height: 80%;
   @include display-flex();
 }
 
-@include field-borders();
-
-.wrapper {
-  width: 40%;
-  height: 90%;
-  border-radius: 20px;
-  background-color: #EDD4D4;
-  position: relative;
+.configuration-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+ 
+  position: relative;
+  align-items: center;
+
+  button {
+    position: relative;
+    margin-top: 1em;
+    height: 2.5em;
+    background-color: $light_green;
+    font-size: 24px;
+  }
+}
+
+.wrapper {
+  height: 60vh;
+  width: 35vw;
+  border-radius: 20px;
+  background-color: #EDD4D4;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
 }
-
-button {
-  color: #191919;
+section {
+  position: absolute;
+  color: pink;
   font-size: 24px;
-  height: 100%;
-  background-color: #ccc;
+  right: 0;
+  top: -1.5em;
+  animation: appear 1s forwards ease-in-out;
 }
-
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 sea-field * {
   z-index: 5;
   text-overflow: ellipsis;
@@ -45,7 +68,7 @@ sea-field * {
   font-family: 'Pacifico', cursive !important;
   color: #94BFA7;
   font-size: 45px;
-  top: -10%;
+  top: -7.5%;
   text-indent: 1em;
   position: absolute;
 }

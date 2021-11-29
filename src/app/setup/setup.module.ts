@@ -7,17 +7,21 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { GameFieldModule } from '../game-field/game-field.module';
 import { ShipComponent } from './ship/ship.component';
 import { MatIconModule } from '@angular/material/icon';
-
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { ShowHideTextDirective } from './show-hide-text.directive';
+import { JoinRoomGuard } from './join-room.guard';
 
 @NgModule({
-  declarations: [SetupComponent, ShipComponent],
+  declarations: [SetupComponent, ShipComponent, ShowHideTextDirective],
   imports: [
     CommonModule,
     SetupRoutingModule,
     SharedModule,
     DragDropModule,
     GameFieldModule,
-    MatIconModule
-  ]
+    MatIconModule,
+    ClipboardModule
+  ],
+  providers: [JoinRoomGuard]
 })
 export class SetupModule { }

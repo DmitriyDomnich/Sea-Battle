@@ -10,7 +10,33 @@ html {
   height: 100%;
   overflow: hidden;
 }
-
+.snack-bar {
+  // ? add styles here
+}
+.left-no-borders {
+  border-left: none !important;
+}
+.bottom-no-borders {
+  border-bottom: none !important;
+}
+.top-no-borders {
+  border-top: none !important;
+}
+.right-no-borders {
+  border-right: none !important;
+}
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.fade {
+  animation: fade 1.5s forwards;
+  user-select: none;
+}
 .cross {
   background-color: red;
   width: 10%;

@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { Bar } from '../../models/bar';
 
 @Component({
   selector: 'sea-field',

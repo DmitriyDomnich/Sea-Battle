@@ -16,7 +16,6 @@
   box-shadow: 0px 0px 20px 4px variables.$white_pink;
   padding: 2em;
 
-  // flex-direction: column;
   .buttons {
     position: relative;
     display: flex;
@@ -31,13 +30,10 @@
     margin-bottom: 1em;
 
   }
-
   mat-form-field {
     text-align: center;
-    font-size: 24px;
-    width: 50%;
-
-
+    font-size: 20px;
+    width: 75%;
   }
 
   * {

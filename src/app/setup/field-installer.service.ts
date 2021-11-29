@@ -5,8 +5,8 @@ import { Ship } from '../models/ship';
 @Injectable()
 export class FieldInstallerService {
 
-  private renderer: Renderer2;
-  private bars: Array<Bar> = new Array(100).fill(0).map(el => {
+  private _renderer: Renderer2;
+  private _bars: Array<Bar> = new Array(100).fill(0).map(el => {
     return {
       isBusy: false
     }
@@ -14,11 +14,11 @@ export class FieldInstallerService {
   public fieldElement: HTMLElement;
 
   constructor(private rendererFactory: RendererFactory2) {
-    this.renderer = rendererFactory.createRenderer(null, null);
+    this._renderer = rendererFactory.createRenderer(null, null);
   }
 
   public removeFlippedBars(shipId: number) {
-    this.bars.forEach((bar, index) => {
+    this._bars.forEach((bar, index) => {
       if (bar.shipType === shipId) {
         bar.isBusy = false;
         bar.shipType = null;
@@ -35,7 +35,9 @@ export class FieldInstallerService {
   public fillBars(bar: HTMLElement, itemData: Ship, position: number) {
     const indeces: number[] = [];
     const result: any = {
-      shipType: itemData.id
+      shipType: itemData.id,
+      rootPosition: position - 1,
+      oriantation: itemData.orientation
     };
     let itemPosition = position;
     indeces.push(itemPosition - 1);
@@ -44,11 +46,11 @@ export class FieldInstallerService {
       if (itemData.orientation === 'vertical') {
         const oneUp = this.fieldElement.children[itemPosition - 11];
         indeces.push(itemPosition - 11);
-        this.addContent(oneUp);
+        this._addContent(oneUp);
       } else {
         const oneLeft = this.fieldElement.children[itemPosition - 2];
         indeces.push(itemPosition - 2);
-        this.addContent(oneLeft);
+        this._addContent(oneLeft);
       }
     } else if (itemData.barsCount === 3) {
       if (itemData.orientation === 'vertical') {
@@ -58,12 +60,12 @@ export class FieldInstallerService {
         const oneDown = this.fieldElement.children[itemPosition + 9];
         indeces.push(itemPosition + 9);
 
-        this.addContent(oneUp, oneDown);
+        this._addContent(oneUp, oneDown);
       } else {
         const oneLeft = this.fieldElement.children[itemPosition - 2];
         const oneRight = this.fieldElement.children[itemPosition];
         indeces.push(itemPosition - 2, itemPosition);
-        this.addContent(oneLeft, oneRight);
+        this._addContent(oneLeft, oneRight);
       }
     } else if (itemData.barsCount === 4) {
       if (itemData.orientation === 'vertical') {
@@ -76,27 +78,27 @@ export class FieldInstallerService {
         const oneDown = this.fieldElement.children[itemPosition + 9];
         indeces.push(itemPosition + 9);
 
-        this.addContent(oneUp, twoUp, oneDown);
+        this._addContent(oneUp, twoUp, oneDown);
       } else {
         const oneLeft = this.fieldElement.children[itemPosition - 2];
         const oneRight = this.fieldElement.children[itemPosition];
         const twoRight = this.fieldElement.children[itemPosition + 1];
 
         indeces.push(itemPosition - 2, itemPosition, itemPosition + 1);
-        this.addContent(oneLeft, oneRight, twoRight);
+        this._addContent(oneLeft, oneRight, twoRight);
       }
     }
     result.indeces = indeces;
-    this.setIndeces(result);
+    this._setIndeces(result);
   }
-  private addContent(...items: Element[]) {
+  private _addContent(...items: Element[]) {
     for (const item of items) {
-      item.appendChild(this.renderer.createElement('div'));
+      item.appendChild(this._renderer.createElement('div'));
     }
   }
   public removeFilled() {
-    this.getShipBarGroups().forEach(barGroup => {
-      barGroup.forEach((barIndex, i, groupArray) => {
+    this._getShipBarGroups().forEach(barGroup => {
+      barGroup.forEach((barIndex, _, groupArray) => {
 
         const barEl: Element = this.fieldElement.children[barIndex];
 
@@ -106,24 +108,29 @@ export class FieldInstallerService {
             Array.from(barEl.children).forEach(child => {
               barEl.removeChild(child);
             });
-            this.bars[barIndex].isBusy = false;
-            this.bars[barIndex].shipType = null;
+            this._bars[barIndex].isBusy = false;
+            this._bars[barIndex].shipType = null;
+            this._bars[barIndex].isRootPosition = false;
+            this._bars[barIndex].oriantation = 'vertical';
           })
         }
       })
     });
   }
-  private setIndeces(config: { indeces: [], shipType: number }) {
+  private _setIndeces(config: { indeces: [], shipType: number, rootPosition: number, oriantation: any }) {
     config.indeces.forEach((index: number) => {
-      this.bars[index].isBusy = true;
-      this.bars[index].shipType = config.shipType;
+      this._bars[index].isBusy = true;
+      this._bars[index].shipType = config.shipType;
     });
+    const rootBar = this._bars.find((bar, index) => index === config.rootPosition);
+    rootBar.isRootPosition = true;
+    rootBar.oriantation = config.oriantation;
   }
-  private getShipBarGroups() {
+  private _getShipBarGroups() {
     const usedIndeces = [];
     const shipBarGroups: Array<Array<number>> = [];
 
-    this.bars.forEach((bar, index, arr) => {
+    this._bars.forEach((bar, index, arr) => {
       if (!bar.shipType || usedIndeces.find(val => val === bar.shipType)) return;
       const shipType = bar.shipType;
       const indeces = [];
@@ -140,7 +147,7 @@ export class FieldInstallerService {
     return shipBarGroups;
   }
   public isSafe(bar: HTMLElement, itemData: Ship, position: number) {
-    if (this.checkFieldOverflow(bar, itemData, position) && this.checkNearShips(bar, itemData, position)) {
+    if (this._checkFieldOverflow(bar, itemData, position) && this._checkNearShips(bar, itemData, position)) {
       return true;
     }
     return false;
@@ -148,26 +155,28 @@ export class FieldInstallerService {
   public isSafeFlip(bar: HTMLElement, itemData: Ship, position: number) {
     const shipDataCopy = JSON.parse(JSON.stringify(itemData));
     shipDataCopy.orientation === 'horizontal' ? shipDataCopy.orientation = 'vertical' : shipDataCopy.orientation = 'horizontal';
-    if (this.checkFieldOverflow(bar, shipDataCopy, position) && this.checkNearShips(bar, shipDataCopy, position)) {
+    if (this._checkFieldOverflow(bar, shipDataCopy, position) && this._checkNearShips(bar, shipDataCopy, position)) {
       return true;
     }
     return false;
   }
   public getBarsConfig() {
-    return this.bars
+    return this._bars
       .map((bar, index) => {
         if (bar.isBusy) {
           return {
             isBusy: bar.isBusy,
             shipType: bar.shipType,
-            index: index
+            index: index,
+            isRootPosition: bar.isRootPosition,
+            oriantation: bar.oriantation
           };
         }
         return bar;
       })
       .filter(bar => bar.isBusy);
   }
-  private checkFieldOverflow(bar: HTMLElement, itemData: Ship, position: number): boolean {
+  private _checkFieldOverflow(bar: HTMLElement, itemData: Ship, position: number): boolean {
 
     const itemPosition = position;
 
@@ -197,7 +206,7 @@ export class FieldInstallerService {
     }
     return true;
   }
-  private checkNearShips(bar: HTMLElement, itemData: Ship, position: number): boolean {
+  private _checkNearShips(bar: HTMLElement, itemData: Ship, position: number): boolean {
     const itemPosition = position;
     const bars = this.fieldElement.children;
 

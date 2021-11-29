@@ -1,31 +1,24 @@
-@use 'mixins'as *;
 
-@media (orientation:landscape) {
-  #wrapper {
-    width: 100vw;
-    // height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  @include field-borders;
-
-  h2 {
-    font-style: italic;
-    display: none;
-  }
+#wrapper {
+  width: 100vw;
+  // height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (orientation: portrait) {
-  h2 {
-    font-style: italic !important;
-    display: block;
-    color: lightgray;
-    text-align: center;
-  }
+.enemy-turn,
+.player-turn {
+  position: absolute;
+  top: 15%;
+  color:mediumvioletred;
+  font-size: 24px;
+  z-index: 5 !important;
+}
 
-  #wrapper {
-    display: none;
-  }
+.enemy-turn {
+  right: 20%;
+}
+.player-turn {
+  left: 20%;
 }

@@ -18,7 +18,9 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('field') private _field: any;
   @ViewChild('wrapper') private _shipsContainer: ElementRef<HTMLDivElement>;
   private _messagesSubscription: Subscription;
+  public someoneReady: string | undefined;
   public canSend = false;
+  public inviteLink: string;
   public ships: Ship[] = [
     { id: 1, barsCount: 1, width: 70, height: 80, src: 'assets/ships/1place_ship.png' },
     { id: 2, barsCount: 1, width: 70, height: 80, src: 'assets/ships/1place_ship.png' },
@@ -38,20 +40,15 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
     private _activatedRoute: ActivatedRoute,
     private _socketService: SocketIoService) { }
   ngOnInit() {
-    if (!this._socketService.checkSocket()) {
-      this._socketService.registerSocketIoConnection();
-    }
+    this.inviteLink = this._router.url;
     this._socketService.requestEnemyData();
     this._messagesSubscription = this._gameState.startGame$.subscribe({
       next: message => {
         if (typeof (message) === 'boolean') {
-          console.log(this._gameState.enemyField, '- enemy field', this._gameState.playerField, '- your field.');
           this._router.navigate(['game', this._activatedRoute.snapshot.paramMap.get('id')]);
         } else if (typeof (message) === 'string') {
-          console.log(message);
-        } else {
-          console.log(this._gameState.enemyField, '- enemy field', this._gameState.playerField, '- your field.');
-          this._router.navigate(['game', this._activatedRoute.snapshot.paramMap.get('id')]);
+          if (!this.someoneReady)
+            this.someoneReady = message;
         }
       }
     });

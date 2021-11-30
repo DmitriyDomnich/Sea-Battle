@@ -22,12 +22,12 @@ export class GoBackComponent {
     const dialogRef = this._dialog.open(GoBackDialogComponent);
     dialogRef.afterClosed().subscribe((isStay: boolean) => {
       if (isStay) {
-        const roomId = this._router.url;
-        if (roomId.includes('game')) {
-          this._socketService.leaveRoom(this._activatedRoute.snapshot.paramMap.get('id'));
-        } else {
-          this._socketService.leaveSetupRoom(this._activatedRoute.snapshot.paramMap.get('id'));
-        }
+        // const roomId = this._router.url;
+        // if (roomId.includes('game')) {
+        //   this._socketService.leaveRoom(this._activatedRoute.snapshot.paramMap.get('id'));
+        // } else {
+        //   this._socketService.leaveRoom(this._activatedRoute.snapshot.paramMap.get('id'), true);
+        // }
         this._router.navigate(['home']);
       }
     })

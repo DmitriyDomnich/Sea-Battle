@@ -18,6 +18,7 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('field') private _field: any;
   @ViewChild('wrapper') private _shipsContainer: ElementRef<HTMLDivElement>;
   private _messagesSubscription: Subscription;
+  private _startGame: Subscription;
   public someoneReady: string | undefined;
   public canSend = false;
   public inviteLink: string;
@@ -42,10 +43,17 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.inviteLink = this._router.url;
     this._socketService.requestEnemyData();
+    this._startGame = this._socketService.getGameStateInRunningGame$.subscribe(fieldConfig => {
+      this._gameState.gameWasGoing = true;
+      this._gameState.enemyField = fieldConfig[0];
+      this._gameState.playerField = fieldConfig[1];
+    });
     this._messagesSubscription = this._gameState.startGame$.subscribe({
       next: message => {
         if (typeof (message) === 'boolean') {
-          this._router.navigate(['game', this._activatedRoute.snapshot.paramMap.get('id')]);
+          this._router.navigate(['game', this._activatedRoute.snapshot.paramMap.get('id')], {
+            skipLocationChange: true
+          });
         } else if (typeof (message) === 'string') {
           if (!this.someoneReady)
             this.someoneReady = message;
@@ -58,6 +66,7 @@ export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   ngOnDestroy() {
     this._messagesSubscription.unsubscribe();
+    this._startGame.unsubscribe();
   }
   public dragStart(event: any) {
     if (event.source.data.src.includes('2') || event.source.data.src.includes('4')) {

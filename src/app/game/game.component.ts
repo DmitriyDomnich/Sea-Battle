@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { EMPTY, iif, Observable, Subscription } from 'rxjs';
+import { endWith, filter, startWith, switchMap, tap } from 'rxjs/operators';
 import { SocketIoService } from '../core/socket-io.service';
 import { FieldBarComponent } from '../game-field/field-bar/field-bar.component';
 import { AdBarsDirective } from './ad-bars.directive';
@@ -28,6 +28,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren(AdBarsDirective) adBars: QueryList<AdBarsDirective>;
   @ViewChild('player') playerField: any;
   @ViewChild('enemy') enemyField: any;
+  private _joinGame$: Observable<any>;
   private _shipClickedSubs: Subscription[] = [];
   private _runningGameSub: Subscription;
   private _turnSub: Subscription;
@@ -51,11 +52,26 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     this._turnSub = this._gameStateService.turnChange$.subscribe(isYourTurn => {
       this.isYourTurn = isYourTurn;
     });
-    if (this._gameStateService.gameWasGoing) {
-      if (!this._gameStateService.enemyField || !this._gameStateService.playerField) {
-        this._socketService.requestEnemyData();
+    debugger;
+    if (!this._gameStateService.playerField || !this._gameStateService.enemyField) {
+      this._socketService.requestEnemyData();
+      this._joinGame$ = this._socketService.getGameStateInRunningGame$.pipe(
+        switchMap(fieldConfigs => {
+          console.log(fieldConfigs);
+
+          this._socketService.askForFieldsInRunningGame();
+          this._gameStateService.gameWasGoing = true;
+          this._gameStateService.enemyField = fieldConfigs[0];
+          this._gameStateService.playerField = fieldConfigs[1];
+          return this._socketService.joinRunningGame$;
+        })
+      );
+    } else {
+      if (this._gameStateService.gameWasGoing) {
+        this._socketService.askForFieldsInRunningGame();
+        this._joinGame$ = this._socketService.joinRunningGame$;
       }
-      this._socketService.askForFieldsInRunningGame();
+      //this._joinGame$ = this._socketService.joinRunningGame$;
     }
     this._endGameSub = this._gameStateService.endGame$
       .pipe(filter(result => !!result)).subscribe(result => {
@@ -70,17 +86,45 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
   ngAfterViewInit(): void {
+    if (this._joinGame$) {
+      this._runningGameSub = this._joinGame$.subscribe(data => {
+        console.log(data);
+
+        this._instantiateFields();
+        this._gameStateService.isYourTurn = data.isYourTurn;
+        this._fieldChangerService.addCrossesAndWavesToField(data.enemyField, this.enemyField.elementRef.nativeElement);
+        this._fieldChangerService.addCrossesAndWavesToField(data.playerField, this.playerField.elementRef.nativeElement);
+      })
+    } else {
+      this._instantiateFields();
+    }
+    // this._joinRunningGameSub = this._socketService.getGameStateInRunningGame$.pipe(
+    //   switchMap(fieldConfig => {
+
+    //     this._socketService.askForFieldsInRunningGame();
+    //     this._fieldChangerService.enemyFieldRef = this.enemyField.elementRef.nativeElement;
+    //     this._fieldChangerService.playerFieldRef = this.playerField.elementRef.nativeElement;
+    //     const playerFieldRef = this.adBars.first.viewContainerRef;
+    //     const enemyFieldRef = this.adBars.last.viewContainerRef;
+    //     this._loadPlayerFieldComponents(playerFieldRef);
+    //     this._loadEnemyFieldComponents(enemyFieldRef);
+    //     return this._socketService.getGameStateInRunningGame$;
+    //   })
+    // ).subscribe(data => {
+    //   this._gameStateService.isYourTurn = data.isYourTurn;
+    //   this._fieldChangerService.addCrossesAndWavesToField(data.enemyField, this.enemyField.elementRef.nativeElement);
+    //   this._fieldChangerService.addCrossesAndWavesToField(data.playerField, this.playerField.elementRef.nativeElement);
+    // });
+    // this._runningGameSub = this._socketService.joinRunningGame$.subscribe((data: { enemyField: any, playerField: any, isYourTurn: boolean }) => {
+    // });
+  }
+  private _instantiateFields() {
     this._fieldChangerService.enemyFieldRef = this.enemyField.elementRef.nativeElement;
     this._fieldChangerService.playerFieldRef = this.playerField.elementRef.nativeElement;
     const playerFieldRef = this.adBars.first.viewContainerRef;
     const enemyFieldRef = this.adBars.last.viewContainerRef;
     this._loadPlayerFieldComponents(playerFieldRef);
     this._loadEnemyFieldComponents(enemyFieldRef);
-    this._runningGameSub = this._socketService.runningGame$.subscribe((data: { enemyField: any, playerField: any, isYourTurn: boolean }) => {
-      this._gameStateService.isYourTurn = data.isYourTurn;
-      this._fieldChangerService.addCrossesAndWavesToField(data.enemyField, this.enemyField.elementRef.nativeElement);
-      this._fieldChangerService.addCrossesAndWavesToField(data.playerField, this.playerField.elementRef.nativeElement);
-    });
   }
   ngOnDestroy() {
     if (this._runningGameSub) {

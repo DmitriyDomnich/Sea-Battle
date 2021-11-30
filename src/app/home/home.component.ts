@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { from } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { v4 as createCode } from 'uuid';
 import { SocketIoService } from '../core/socket-io.service';
 import { GameStateService } from '../game/game-state.service';
@@ -11,7 +11,9 @@ import { GameStateService } from '../game/game-state.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+
+  private _navigateSub: Subscription;
 
   constructor(private router: Router,
     private _gameState: GameStateService,
@@ -20,6 +22,10 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this._showMessage();
     this._gameState.resetState();
+  }
+  ngOnDestroy() {
+    if (this._navigateSub)
+      this._navigateSub.unsubscribe();
   }
   public startNewGame() {
     const code = createCode().slice(0, 8);

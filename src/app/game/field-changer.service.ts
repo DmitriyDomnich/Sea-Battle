@@ -1,4 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { GameStateService } from './game-state.service';
+import { FieldConfig } from './game.component';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,8 @@ export class FieldChangerService {
   private _enemyFieldRef: HTMLElement;
   private _playerFieldRef: HTMLElement;
 
-  constructor(private rendererFactory: RendererFactory2) {
+  constructor(private rendererFactory: RendererFactory2,
+    private _gameStateService: GameStateService) {
     this._renderer = rendererFactory.createRenderer(null, null);
   }
 
@@ -37,10 +40,22 @@ export class FieldChangerService {
       }
     })
   }
+  public addFullyShotShipsToEnemyField() {
+    const enemyShipsConfig: FieldConfig[] = this._gameStateService.enemyField;
+    const shipTypes = new Set(enemyShipsConfig.map(conf => conf.shipType));
+
+    shipTypes.forEach(shipType => {
+      const oneShipConfigs = enemyShipsConfig.filter(shipConfig => shipConfig.shipType === shipType);
+      if (oneShipConfigs.every(shipBarConfig => this._enemyFieldRef.children[shipBarConfig.index].children.length)) {
+        const rootElConfig = oneShipConfigs.find(enemyShipConfig => enemyShipConfig.isRootPosition);
+        this.prependImageToEnemyField(rootElConfig);
+      }
+    });
+  }
   public getFieldsInRunningGame() {
     const fields = { enemyField: [], playerField: [] };
     Array.from(this._enemyFieldRef.children)
-      .forEach((fieldBar, index, bars) => {
+      .forEach((fieldBar, index) => {
         if (fieldBar.children.length) {
           fields.playerField.push({
             index: index,
@@ -49,7 +64,7 @@ export class FieldChangerService {
         }
       });
     Array.from(this._playerFieldRef.children)
-      .forEach((fieldBar, index, bars) => {
+      .forEach((fieldBar, index) => {
         if (fieldBar.children.length > 1) {
           fields.enemyField.push({
             index: index,
@@ -76,6 +91,79 @@ export class FieldChangerService {
     const barEl = this._playerFieldRef.children[index];
     barEl.append(...this._getWaves());
     barEl.classList.add('sea');
+  }
+  public checkIfShipDestroyed(shipConfig: FieldConfig) {
+    const enemyShipsConfig: FieldConfig[] = this._gameStateService.enemyField;
+    const sameShips = enemyShipsConfig.filter(anyShipConfig => anyShipConfig.shipType === shipConfig.shipType);
+    if (sameShips.length === 1) {
+      return true;
+    }
+    let shipsKilledCount = 0;
+    sameShips.forEach(ship => {
+      if (this._enemyFieldRef.children[ship.index].children.length) {
+        shipsKilledCount++;
+      }
+    });
+    if (shipsKilledCount === sameShips.length) {
+      return true;
+    }
+    return false;
+  }
+  public prependImageToEnemyField(shipConfig: FieldConfig) {
+    const img = this.getImageNode(shipConfig);
+    const rootBar = this._getMainBarElement(shipConfig);
+    if (rootBar.oriantation === 'horizontal') {
+      img.style.transform = 'rotate(-90deg)';
+    }
+    this._enemyFieldRef.children[rootBar.index].prepend(img);
+  }
+  public getImageNode(barConfig: FieldConfig) {
+    const imgNode: HTMLImageElement = this._renderer.createElement('img');
+    const imageConfig = this._getImageConfigByNumber(barConfig.shipType);
+    imgNode.src = imageConfig.src;
+    imgNode.height = imageConfig.height;
+    imgNode.width = imageConfig.width;
+    imgNode.draggable = false;
+    return imgNode;
+  }
+  private _getImageConfigByNumber(shipNum: number): { src: string, width: number, height: number } {
+    switch (shipNum) {
+      case 1:
+      case 2:
+      case 3:
+        return {
+          src: 'assets/ships/1place_ship.png',
+          width: 70,
+          height: 80
+        };
+      case 4:
+      case 5:
+        return {
+          src: 'assets/ships/2place_ship.png',
+          width: 80,
+          height: 140
+        };
+      case 6:
+      case 7:
+        return {
+          src: 'assets/ships/3place_ship.png',
+          width: 70,
+          height: 220
+        };
+      default:
+        return {
+          src: 'assets/ships/4place_ship.png',
+          width: 65,
+          height: 300
+        };
+    }
+  }
+  private _getMainBarElement(shipConfig: FieldConfig) {
+    const enemyShipsConfig: FieldConfig[] = this._gameStateService.enemyField;
+    const rootShipBar = enemyShipsConfig
+      .filter(someShipConfig => someShipConfig.shipType === shipConfig.shipType)
+      .find(shipConfig => shipConfig.isRootPosition);
+    return rootShipBar;
   }
   private _getWaves() {
     let even = true, count = 1;

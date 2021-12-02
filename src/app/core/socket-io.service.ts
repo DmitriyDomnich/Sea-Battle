@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { fromEvent, Observable, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { io, Socket } from 'socket.io-client';
 import { FieldChangerService } from '../game/field-changer.service';
 import { GameStateService } from '../game/game-state.service';
@@ -40,7 +39,7 @@ export class SocketIoService {
       if (message.includes('full')) {
         this._joinRoom.next(2);
       } else {
-        this._joinRoom.next(0); // ? was without else
+        this._joinRoom.next(0);
       }
     });
     this._socket.on('no-such-room', () => {
@@ -56,16 +55,9 @@ export class SocketIoService {
       }
     });
     this._socket.on('enemyLeftSetup', () => {
-      console.log('enemy left');
-
       this._gameState.enemyField = null;
     });
-    // this._socket.on('gameIsGoing', (fieldConigurations: any[]) => {
-    //   this._gameState.gameWasGoing = true;
-    //   this._gameState.enemyField = fieldConigurations[0];
-    //   this._gameState.playerField = fieldConigurations[1];
-    // });
-    this.getGameStateInRunningGame$ = fromEvent(this._socket, 'gameIsGoing'); // ! Reworking this thing
+    this.getGameStateInRunningGame$ = fromEvent(this._socket, 'gameIsGoing');
     this._socket.on('someoneReady', (enemyFieldConfig: any) => {
       this._gameState.enemyField = enemyFieldConfig;
     });
@@ -87,13 +79,12 @@ export class SocketIoService {
     });
     this.joinRunningGame$ = fromEvent(this._socket, 'sendRunningGameFields');
   }
-  public removeGameEvents(roomId: string) {
+  public removeGameEvents() {
     this._socket
       .off('player-ship-shot')
       .off('player-nothing-shot')
       .off('enemyJoinedRunningGame')
       .off('sendRunningGameFields');
-    // this.leaveRoom(roomId);
   }
   public shootEnemyNothing(index: number) {
     this._socket.emit('shot-nothing', this._router.url.slice(-8), index);
@@ -104,9 +95,6 @@ export class SocketIoService {
   public leaveRoom(roomId: string, leftSetup = false) {
     this._socket.emit('leave-room', roomId, leftSetup);
   }
-  // public leaveSetupRoom(roomId: string) {
-  //   this._socket.emit('leave-setup-room', roomId); // this._socket.emit('leave-setup-room', roomId); // ! delete later
-  // }
   public createRoom(roomId: string) {
     this._socket.emit('create-room', roomId);
   }

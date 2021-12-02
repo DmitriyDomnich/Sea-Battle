@@ -27,17 +27,22 @@ export class FieldBarComponent implements OnInit {
         this._socketService.shootEnemyNothing(this._index);
       }
       this._clicked = true;
+      this._resetBarStyles();
       this.barClicked.emit();
     }
   }
   @HostListener('mouseenter') onHover() {
-    if (this.data || this.data === null) {
+    if ((this.data || this.data === null) && !this._el.nativeElement.children.length) {
       this._el.nativeElement.style.backgroundColor = '#F7A1C4'
       this._el.nativeElement.style.cursor = 'pointer';
     }
   }
   @HostListener('mouseleave') onLeave() {
     this._el.nativeElement.style.backgroundColor = 'transparent';
+  }
+  private _resetBarStyles() {
+    this._el.nativeElement.style.backgroundColor = 'initial';
+    this._el.nativeElement.style.cursor = 'initial';
   }
   private _setBarClass() {
     this.className = '';

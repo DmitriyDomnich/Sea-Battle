@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SocketIoService } from 'src/app/core/socket-io.service';
+import { Router } from '@angular/router';
 import { GoBackDialogComponent } from '../go-back-dialog/go-back-dialog.component';
 
 
@@ -14,20 +13,12 @@ export class GoBackComponent {
 
   constructor(
     private _router: Router,
-    private _socketService: SocketIoService,
-    private _activatedRoute: ActivatedRoute,
     private _dialog: MatDialog) { }
 
   public goHome() {
     const dialogRef = this._dialog.open(GoBackDialogComponent);
     dialogRef.afterClosed().subscribe((isStay: boolean) => {
       if (isStay) {
-        // const roomId = this._router.url;
-        // if (roomId.includes('game')) {
-        //   this._socketService.leaveRoom(this._activatedRoute.snapshot.paramMap.get('id'));
-        // } else {
-        //   this._socketService.leaveRoom(this._activatedRoute.snapshot.paramMap.get('id'), true);
-        // }
         this._router.navigate(['home']);
       }
     })

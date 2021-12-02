@@ -41,6 +41,7 @@ section {
   color: pink;
   font-size: 24px;
   right: 0;
+  user-select: none;
   top: -1.5em;
   animation: appear 1s forwards ease-in-out;
 }

@@ -33,7 +33,6 @@ export class GameStateService {
     return this._gameWasGoing;
   }
   public set playerField(field: any) {
-
     if (this._playerFieldConfig) {
       this._isYourTurn = false;
     } else {
@@ -44,23 +43,8 @@ export class GameStateService {
     this._playerFieldConfig = field;
     this._readyState.you = true;
     this._setGameStartState('Wait for your enemy to set up.');
-    //console.log(`player field ${this.isYourTurn}`);
-    // if (!(this._playerFieldConfig)) {
-    //   this._playerFieldConfig = field;
-    //   this._readyState.you = true;
-    //   if (!this._enemyFieldConfig) {
-    //     this._isYourTurn = true;
-    //   }
-    //   this._setGameStartState('Wait for your enemy to set up.');
-    // } else {
-    //   this._playerFieldConfig = field;
-    //   this._readyState.you = true;
-    //   this._isYourTurn = false;
-    // }
-    // console.log(`player turn ${this.isYourTurn}`);
   }
   public set enemyField(field: any) {
-
     if (field) {
       if (this._enemyFieldConfig) {
         this._isYourTurn = true;
@@ -69,7 +53,6 @@ export class GameStateService {
           this._isYourTurn = false;
         }
       }
-
       this._enemyFieldConfig = field;
       this._readyState.enemy = true;
       this._setGameStartState('Your enemy is waiting for you.');
@@ -77,23 +60,6 @@ export class GameStateService {
       this._enemyFieldConfig = null;
       this._readyState.enemy = false;
     }
-    //console.log(`enemy field ${this.isYourTurn}`);
-    // if (field) {
-    //   if (this._enemyFieldConfig) { // if enemy field was already provided, player gets the turn
-    //     this._isYourTurn = true;
-    //   }
-    //   if (!this._playerFieldConfig) {
-    //     this._isYourTurn = false;
-    //   }
-    //   this._enemyFieldConfig = field;
-    //   this._readyState.enemy = true;
-    //   this._setGameStartState('Your enemy is waiting for you.');
-    // } else {
-    //   this._enemyFieldConfig = null;
-    //   this._readyState.enemy = false;
-    // }
-    // console.log(`player turn ${this.isYourTurn}`);
-
   }
   public get isYourTurn() {
     return this._isYourTurn;

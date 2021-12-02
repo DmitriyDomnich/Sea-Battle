@@ -8,10 +8,11 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 export class FieldComponent implements OnInit {
 
   constructor(
-    public elementRef: ElementRef
+    public elementRef: ElementRef,
   ) { }
 
   ngOnInit(): void {
+
   }
 
 }

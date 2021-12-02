@@ -43,6 +43,7 @@ html {
   border-radius: 15px;
   height: 100%;
   position: absolute;
+  z-index: 1;
 }
 
 .wave {
@@ -51,6 +52,7 @@ html {
   color: #85DAFF;
   opacity: 0;
   animation: appear .6s ease-in forwards;
+  z-index: 0;
 }
 
 @keyframes appear {

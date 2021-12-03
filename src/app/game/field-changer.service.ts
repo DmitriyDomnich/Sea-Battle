@@ -1,5 +1,5 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
-import { GameStateService } from './game-state.service';
+import { GameStateService } from '../core/game-state.service';
 import { FieldConfig } from './game.component';
 
 @Injectable({

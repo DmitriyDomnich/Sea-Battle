@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { fromEvent, Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { FieldChangerService } from '../game/field-changer.service';
-import { GameStateService } from '../game/game-state.service';
+import { GameStateService } from './game-state.service';
 
 @Injectable({
   providedIn: 'root'

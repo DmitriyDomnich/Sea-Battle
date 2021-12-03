@@ -2,7 +2,7 @@ import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketIoService } from '../core/socket-io.service';
-import { GameStateService } from '../game/game-state.service';
+import { GameStateService } from '../core/game-state.service';
 import { Ship } from '../models/ship';
 import { FieldInstallerService } from './field-installer.service';
 import { Subscription } from 'rxjs';

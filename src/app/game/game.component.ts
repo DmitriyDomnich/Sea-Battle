@@ -8,7 +8,7 @@ import { FieldBarComponent } from '../game-field/field-bar/field-bar.component';
 import { AdBarsDirective } from './ad-bars.directive';
 import { FieldChangerService } from './field-changer.service';
 import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
-import { GameStateService } from './game-state.service';
+import { GameStateService } from '../core/game-state.service';
 
 export interface FieldConfig {
   isBusy: boolean,

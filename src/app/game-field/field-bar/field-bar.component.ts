@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
 import { SocketIoService } from 'src/app/core/socket-io.service';
 import { FieldChangerService } from 'src/app/game/field-changer.service';
-import { GameStateService } from 'src/app/game/game-state.service';
+import { GameStateService } from 'src/app/core/game-state.service';
 
 @Component({
   selector: 'sea-field-bar',

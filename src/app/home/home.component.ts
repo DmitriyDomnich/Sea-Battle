@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { from, Subscription } from 'rxjs';
 import { v4 as createCode } from 'uuid';
 import { SocketIoService } from '../core/socket-io.service';
-import { GameStateService } from '../game/game-state.service';
+import { GameStateService } from '../core/game-state.service';
 
 @Component({
   selector: 'app-home',

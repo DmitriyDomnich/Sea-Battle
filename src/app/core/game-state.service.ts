@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TurnHandlerService } from '../game/turn-handler.service';
 
-type startGame = string | boolean;
+type StartGame = string | boolean;
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,22 @@ export class GameStateService {
   private _playerFieldConfig: any[];
   private _enemyFieldConfig: any[];
   private _isYourTurn = false;
-  private _startGame = new Subject<startGame>();
+  private _startGame = new Subject<StartGame>();
   private _turnChange = new Subject<boolean>();
   public turnChange$ = this._turnChange.asObservable();
   public startGame$ = this._startGame.asObservable();
   public endGame$ = new Subject<string>();
 
+  constructor(private _turnHandlerService: TurnHandlerService) {
+    _turnHandlerService.turnChange$.subscribe(_ => this.isYourTurn = !this.isYourTurn);
+  }
+
   public set isYourTurn(bool: boolean) {
     this._isYourTurn = bool;
+
+    this._turnHandlerService.resetTimer();
+    this._turnHandlerService.startTimer();
+
     this._turnChange.next(bool);
   }
   public set gameWasGoing(v: boolean) {
@@ -69,10 +78,6 @@ export class GameStateService {
   }
   public get enemyField() {
     return this._enemyFieldConfig;
-  }
-
-  public emitStartGame() {
-    this._startGame.next(true);
   }
   public resetState() {
     this._readyState.enemy = false;

@@ -5,12 +5,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .enemy-turn,
 .player-turn {
   position: absolute;
-  top: 15%;
+  top: -10%;
   color:mediumvioletred;
   font-size: 24px;
   z-index: 5 !important;

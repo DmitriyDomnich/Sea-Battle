@@ -8,10 +8,11 @@ import { AdBarsDirective } from './ad-bars.directive';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
 import { JoinGameGuard } from './join-game.guard';
+import { TurnTimerComponent } from './turn-timer/turn-timer.component';
 
 
 @NgModule({
-  declarations: [GameComponent, AdBarsDirective, GameOverDialogComponent],
+  declarations: [GameComponent, AdBarsDirective, GameOverDialogComponent, TurnTimerComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

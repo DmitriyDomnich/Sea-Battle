@@ -15,6 +15,8 @@ export class SocketIoService {
   public joinRoom$ = this._joinRoom.asObservable();
   public getGameStateInRunningGame$: Observable<any>;
   public joinRunningGame$: Observable<any>;
+  public enemyLeftGame$: Observable<void>;
+  public enemyJoinedGame$ = new Subject();
 
   constructor(
     private _gameState: GameStateService,
@@ -51,6 +53,7 @@ export class SocketIoService {
           this.sendFieldConfiguration(this._gameState.playerField, this._router.url.slice(-8));
         } else {
           this.sendBothFieldsConfiguration();
+          this.enemyJoinedGame$.next();
         }
       }
     });
@@ -64,6 +67,7 @@ export class SocketIoService {
   }
   public registerGameEvents() {
     this._socket.on('player-ship-shot', (index) => {
+      this._gameState.isYourTurn = false;
       this._fieldChangerService.playerShipShot(index);
       this._gameState.isGameOver(this._fieldChangerService.playerFieldRef, '_playerFieldConfig');
     });
@@ -78,6 +82,7 @@ export class SocketIoService {
         this._gameState.isYourTurn ? false : true);
     });
     this.joinRunningGame$ = fromEvent(this._socket, 'sendRunningGameFields');
+    this.enemyLeftGame$ = fromEvent(this._socket, 'enemyLeftGame');
   }
   public removeGameEvents() {
     this._socket

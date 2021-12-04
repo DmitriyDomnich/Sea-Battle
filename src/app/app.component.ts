@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
         } else {
           if (this._isSetupPage && ev.url.slice(1, 5) === 'game') {
             this._isSetupPage = false;
-            console.log('not setup anymore');
+            // console.log('not setup anymore');
           } else if (this._isSetupPage && ev.url.slice(1, 5) === 'home') {
             if (this._roomId) {
               this._socketService.leaveRoom(this._roomId, true);

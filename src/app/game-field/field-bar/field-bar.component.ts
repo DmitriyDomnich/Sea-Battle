@@ -1,24 +1,28 @@
-import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { SocketIoService } from 'src/app/core/socket-io.service';
 import { FieldChangerService } from 'src/app/game/field-changer.service';
 import { GameStateService } from 'src/app/core/game-state.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'sea-field-bar',
   templateUrl: './field-bar.component.html',
   styleUrls: ['./field-bar.component.scss']
 })
-export class FieldBarComponent implements OnInit {
+export class FieldBarComponent implements OnInit, OnDestroy {
   @Input() data: any;
   @Output() barClicked = new EventEmitter<void>();
   @HostBinding('class') className: string;
+  private _enemyLeavesJoinsSub = new Subscription();
   private _index: number;
   private _clicked = false;
+  private _canPress = true;
 
   @HostListener('click') onClick() {
     if (!this._clicked && (this.data || this.data === null)
-      && this._gameStateService.isYourTurn && !this._el.nativeElement.children.length) {
+      && this._gameStateService.isYourTurn && !this._el.nativeElement.children.length && this._canPress) {
       if (this.data?.isBusy) {
+        this._gameStateService.isYourTurn = true;
         this._fieldChangerService.shootEnemyShip(this._index);
         this._socketService.shootEnemyShip(this._index);
       } else {
@@ -68,7 +72,18 @@ export class FieldBarComponent implements OnInit {
   ) {
   }
   ngOnInit() {
+    if (this.data || this.data === null) {
+      this._enemyLeavesJoinsSub.add(this._socketService.enemyJoinedGame$.subscribe(_ => {
+        this._canPress = true;
+      }));
+      this._enemyLeavesJoinsSub.add(this._socketService.enemyLeftGame$.subscribe(_ => {
+        this._canPress = false;
+      }));
+    }
     this._index = Array.from(this._el.nativeElement.parentElement.children).indexOf(this._el.nativeElement);
     this._setBarClass();
+  }
+  ngOnDestroy() {
+    this._enemyLeavesJoinsSub.unsubscribe();
   }
 }

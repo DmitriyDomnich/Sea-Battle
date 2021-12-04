@@ -9,6 +9,7 @@ import { AdBarsDirective } from './ad-bars.directive';
 import { FieldChangerService } from './field-changer.service';
 import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
 import { GameStateService } from '../core/game-state.service';
+import { TurnHandlerService } from './turn-handler.service';
 
 export interface FieldConfig {
   isBusy: boolean,
@@ -38,6 +39,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _gameStateService: GameStateService,
     private _fieldChangerService: FieldChangerService,
+    private _turnHandlerService: TurnHandlerService,
     private _socketService: SocketIoService,
     private _dialog: MatDialog,
     private _router: Router) {
@@ -88,13 +90,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     } else {
       this._instantiateFields();
+      this._turnHandlerService.startTimer();
     }
-  }
-  private _instantiateFields() {
-    this._fieldChangerService.enemyFieldRef = this.enemyField.elementRef.nativeElement;
-    this._fieldChangerService.playerFieldRef = this.playerField.elementRef.nativeElement;
-    this._loadPlayerFieldComponents(this.adBars.first.viewContainerRef);
-    this._loadEnemyFieldComponents(this.adBars.last.viewContainerRef);
   }
   ngOnDestroy() {
     if (this._runningGameSub) {
@@ -104,6 +101,13 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     this._shipClickedSubs.forEach(barSub => barSub.unsubscribe());
     this._endGameSub.unsubscribe();
     this._socketService.removeGameEvents();
+    this._turnHandlerService.resetTimer();
+  }
+  private _instantiateFields() {
+    this._fieldChangerService.enemyFieldRef = this.enemyField.elementRef.nativeElement;
+    this._fieldChangerService.playerFieldRef = this.playerField.elementRef.nativeElement;
+    this._loadPlayerFieldComponents(this.adBars.first.viewContainerRef);
+    this._loadEnemyFieldComponents(this.adBars.last.viewContainerRef);
   }
   private _loadPlayerFieldComponents(viewContainerRef: ViewContainerRef) {
     const playerFieldConfig: FieldConfig[] = this._gameStateService.playerField;

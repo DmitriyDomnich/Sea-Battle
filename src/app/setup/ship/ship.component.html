@@ -1,4 +1,4 @@
 <div #container class="container">
     <mat-icon *ngIf='shipConfig.barsCount !== 1' (click)='flip()'>cached</mat-icon>
-    <img #shipImage [style]='shipStyles' [attr.src]='shipConfig.src' alt="ship">
+    <img #shipImage [attr.src]='shipConfig.src' alt="ship">
 </div>

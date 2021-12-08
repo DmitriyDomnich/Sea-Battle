@@ -8,3 +8,17 @@ mat-icon {
   color: #DC7F9B;
   transform: scale(2);
 }
+@media (max-height: 420px) {
+  mat-icon {
+    transform: none;
+  }
+  button {
+    top: .3em;
+    left: .5em;
+  }
+}
+@media (orientation: portrait) {
+  button {
+    top: 5em;
+  }
+}

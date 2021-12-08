@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const message = +test === 0 ? "Room doesn't exist." : "The room is full.";
       this._snackBar.open(message, 'Ok', {
         duration: 2000,
-        panelClass: 'snack-bar'
+        panelClass: 'snack-bar',
       });
     }
   }

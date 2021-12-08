@@ -110,21 +110,31 @@ export class FieldChangerService {
     return false;
   }
   public prependImageToEnemyField(shipConfig: FieldConfig) {
-    const img = this.getImageNode(shipConfig);
     const rootBar = this._getMainBarElement(shipConfig);
-    if (rootBar.oriantation === 'horizontal') {
-      img.style.transform = 'rotate(-90deg)';
-    }
+    const img = this.getImageNode(rootBar);
     this._enemyFieldRef.children[rootBar.index].prepend(img);
   }
   public getImageNode(barConfig: FieldConfig) {
-    const imgNode: HTMLImageElement = this._renderer.createElement('img');
+    const img: HTMLImageElement = this._renderer.createElement('img');
     const imageConfig = this._getImageConfigByNumber(barConfig.shipType);
-    imgNode.src = imageConfig.src;
-    imgNode.height = imageConfig.height;
-    imgNode.width = imageConfig.width;
-    imgNode.draggable = false;
-    return imgNode;
+    img.src = imageConfig.src;
+    img.classList.add('shipInRunningGame');
+    img.style.height = imageConfig.height * 100 + '%';
+    if (barConfig.oriantation === 'horizontal') {
+      img.style.transform = 'rotate(-90deg)';
+      if ([4, 5, 8].find(num => num === barConfig.shipType)) {
+        if (barConfig.shipType === 8) {
+          img.classList.add('margin-left');
+        } else {
+          img.classList.add('margin-right');
+        }
+      }
+    } else if (barConfig.oriantation === 'vertical') {
+      if ([4, 5, 8].find(num => num === barConfig.shipType)) {
+        img.classList.add('margin-top');
+      }
+    }
+    return img;
   }
   private _getImageConfigByNumber(shipNum: number): { src: string, width: number, height: number } {
     switch (shipNum) {
@@ -133,28 +143,28 @@ export class FieldChangerService {
       case 3:
         return {
           src: 'assets/ships/1place_ship.png',
-          width: 70,
-          height: 80
+          width: 10,
+          height: 1
         };
       case 4:
       case 5:
         return {
           src: 'assets/ships/2place_ship.png',
-          width: 80,
-          height: 140
+          width: 10,
+          height: 2
         };
       case 6:
       case 7:
         return {
           src: 'assets/ships/3place_ship.png',
-          width: 70,
-          height: 220
+          width: 9,
+          height: 3
         };
       default:
         return {
           src: 'assets/ships/4place_ship.png',
-          width: 65,
-          height: 300
+          width: 8,
+          height: 4
         };
     }
   }
@@ -167,8 +177,8 @@ export class FieldChangerService {
   }
   private _getWaves() {
     let even = true, count = 1;
-    const waves: Array<HTMLDivElement> = [, , , , ,].fill(0).map((_, index, arr) => {
-      const wave = this._renderer.createElement('div');
+    const waves: Array<HTMLDivElement> = [, , , , ,].fill(0).map(_ => {
+      const wave = this._renderer.createElement('span');
       wave.innerHTML = '~';
       wave.classList.add('wave');
       if (even) {
@@ -177,11 +187,12 @@ export class FieldChangerService {
         wave.style.right = '15%';
       }
       even = !even;
-      wave.style.top = `${count * 7.5}%`;
+      wave.style.bottom = `${count * 7.5}%`;
       count += 2;
       return wave;
     });
     waves[0].style.left = '30%';
+    waves[4].style.left = '30%';
     return waves;
   }
   private _getCross() {

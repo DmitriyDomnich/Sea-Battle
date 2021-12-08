@@ -10,7 +10,11 @@
   user-select: none;
   position: relative;
 }
-
+@media (max-height: 430px) {
+  :host {
+    border-width: 1px;
+  }
+}
 .sea {
   transition: background-color 1s ease-in !important;
   background-color: #0D2C54 !important;

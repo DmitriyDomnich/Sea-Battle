@@ -1,14 +1,11 @@
-@use 'mixins'as *;
-
 :host {
   width: 40vw;
-  height: 80vh;
+  height: 40vw;
   background-color: #E0B7B7;
   position: relative;
-  margin: 0 2em;
+  margin: 0 0 0 2em;
   box-shadow: 0 0 10px 5px #F7A1C4;
   display: flex;
   flex-wrap: wrap;
   margin-top: -2em;
 }
-

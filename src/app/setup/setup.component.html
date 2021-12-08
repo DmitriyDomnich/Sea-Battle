@@ -1,10 +1,12 @@
 <sea-go-back></sea-go-back>
+<sea-turn-device></sea-turn-device>
 <div id="flex-container" cdkDropListGroup>
     <div class="configuration-wrapper">
         <div class="wrapper" #wrapper cdkDropList cdkDropListSortingDisabled>
             <ng-container *ngFor='let ship of ships'>
-                <sea-ship (shipFlipped)='flipped($event)' (cdkDragStarted)='dragStart($event)' [shipConfig]='ship'
-                    [cdkDragData]='ship' cdkDrag></sea-ship>
+                <sea-ship (shipFlipped)='flipped($event)' (cdkDragDropped)='dragDrop($event)' [shipConfig]='ship'
+                    [cdkDragData]='ship' cdkDrag>
+                </sea-ship>
             </ng-container>
         </div>
         <button seaShowHideText #copyButton mat-flat-button [cdkCopyToClipboard]="inviteLink">

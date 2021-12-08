@@ -1,25 +1,72 @@
-
 #wrapper {
   width: 100vw;
-  // height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 
+sea-field {
+  margin: 0 1em;
+}
 .enemy-turn,
 .player-turn {
   position: absolute;
-  top: -10%;
+  top: -1.3em;
   color:mediumvioletred;
   font-size: 24px;
-  z-index: 5 !important;
 }
 
+
 .enemy-turn {
-  right: 20%;
+  right: 10%;
 }
 .player-turn {
-  left: 20%;
+  left: 15%;
+}
+@media (orientation: portrait) {
+  sea-turn-device {
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .enemy-turn {
+    right: 8%;
+  }
+  .player-turn {
+    left: 9%;
+  }
+}
+@media (max-height: 400px) {
+  #wrapper {
+    transform: translateY(-1em);
+  }
+  .enemy-turn,
+  .player-turn {
+    font-size: 16px;
+  }
+}
+@media (min-height: 700px) {
+  .wave {
+    font-size: 100%;
+  }
+  field-bar:last-child {
+    display: none;
+  }
+}
+@media (orientation: portrait) {
+  #wrapper {
+    display: none;
+  }
+}
+@media (min-height: 750px) and (min-height: 1000px) {
+  #wrapper {
+    transform: translateY(-2.5em);
+  }
+}
+@media (max-height: 400px) and (min-width: 780px) {
+  sea-field {
+    height: 37.5vw;
+    width: 37.5vw;
+  }
 }

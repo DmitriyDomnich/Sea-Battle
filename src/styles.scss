@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,8 +9,10 @@ html {
   height: 100%;
   overflow: hidden;
 }
+
 .snack-bar {
-  // ? add styles here
+  text-align: center !important;
+  justify-content: center !important;
 }
 .left-no-borders {
   border-left: none !important;
@@ -24,6 +25,12 @@ html {
 }
 .right-no-borders {
   border-right: none !important;
+}
+.shipInRunningGame {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  user-select: none;
 }
 @keyframes fade {
   0% {
@@ -43,7 +50,7 @@ html {
   border-radius: 15px;
   height: 100%;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
 }
 
 .wave {
@@ -51,6 +58,7 @@ html {
   position: absolute;
   color: #85DAFF;
   opacity: 0;
+  display: block;
   animation: appear .6s ease-in forwards;
   z-index: 0;
 }
@@ -59,12 +67,19 @@ html {
   from {
     opacity: 0;
   }
-
   to {
     opacity: 1;
   }
 }
-
+.margin-top {
+  margin-top: -100%;
+}
+.margin-right {
+  right: 50%;
+}
+.margin-left {
+  left: 50%;
+}
 .sea {
   transition: background-color 1s ease-in !important;
   background-color: #0D2C54 !important;
@@ -75,5 +90,35 @@ html {
 body {
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   background-image: url('./assets/images/zoltan-tasi-sJGvoX_eVhw-unsplash.jpg');
+}
+@media (max-height: 500px) {
+  .wave {
+    font-size: 75%;
+  }
+  sea-field-bar .wave:last-child {
+    display: none;
+  }
+}
+@media (max-height: 400px) {
+  .wave {
+    font-size: 50%;
+  }
+  sea-field-bar .wave:last-child {
+    display: none;
+  }
+  sea-field-bar .wave:first-child {
+    bottom: 2% !important;
+  }
+  sea-field-bar .wave:nth-child(2) {
+    bottom: 13% !important;
+  }
+  sea-field-bar .wave:nth-child(3) {
+    bottom: 22.5% !important;
+  }
+  sea-field-bar .wave:nth-child(4) {
+    bottom: 30% !important;
+    right: 32% !important;
+  }
 }

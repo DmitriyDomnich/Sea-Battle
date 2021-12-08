@@ -17,18 +17,18 @@
   padding: 2em;
 
   .buttons {
+    top: 2em;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 3em;
+
   }
 
   .buttons>button {
     font-size: 24px;
     line-height: 2;
     margin-bottom: 1em;
-
   }
   mat-form-field {
     text-align: center;
@@ -49,17 +49,62 @@
   }
 }
 
-
-
 @media (max-width: 620px) {
   #container {
-    width: 30em;
-
+    margin: 1em;
+    width: 40em;
+    h2 {
+      font-size: 24px;
+    }
     mat-form-field {
       font-size: 16px;
-
     }
   }
-
-
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  h2 {
+    font-size: 20px !important;
+  }
+  #container {
+    height: initial;
+  }
+}
+@media (max-height: 350px) {
+  #container {
+    transform: translateY(-2em);
+    h2 {
+      font-size: 2em;
+    }
+  }
+}
+@media (max-height: 400px) and (orientation: landscape) {
+  #container {
+    h2 {
+      font-size: 16px !important;
+    }
+    .buttons>button {
+      font-size: 16px;
+      line-height: 2;
+      margin-bottom: 1em;
+    }
+  }
+}
+@media (max-height: 600px) and (max-width: 750px) {
+  #container {
+    h2 {
+      font-size: 18px !important;
+    }
+  }
+}
+@media (max-height: 650px) and (min-width: 1000px) {
+  #container {
+    h2 {
+      font-size: 22px !important;
+    }
+  }
+}
+@media (max-height: 300px) {
+  #container {
+    padding: 1em;
+  }
 }

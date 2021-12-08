@@ -15,14 +15,6 @@ export class ShowHideTextDirective implements AfterViewInit, OnDestroy {
     private _renderer: Renderer2
   ) { }
   ngAfterViewInit() {
-    this._div.style.cssText = `
-      position: absolute;
-      left: ${this._elRef.nativeElement.offsetLeft + this._elRef.nativeElement.offsetWidth + 10}px;
-      top: ${this._elRef.nativeElement.offsetTop + this._elRef.nativeElement.offsetHeight / 3}px;
-      font-size: ${getComputedStyle(this._elRef.nativeElement).fontSize};
-      color: white;
-      opacity: 0;
-    `;
     this._div.innerHTML = 'Link copied!';
     this._div.classList.add('fade');
     this._click = fromEvent(this._elRef.nativeElement, 'click');
@@ -31,7 +23,15 @@ export class ShowHideTextDirective implements AfterViewInit, OnDestroy {
     });
   }
   @HostListener('click') onClick() {
-    this._elRef.nativeElement.parentElement.appendChild(this._div);
+    this._div.style.cssText = `
+      position: absolute;
+      left: ${this._elRef.nativeElement.offsetWidth + 10}px;
+      top: 0px;
+      font-size: ${this._elRef.nativeElement.style.fontSize};
+      color: #94BFA7;
+      opacity: 0;
+    `;
+    this._elRef.nativeElement.appendChild(this._div);
   }
   ngOnDestroy() {
     this._sub.unsubscribe();

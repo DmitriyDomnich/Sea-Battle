@@ -4,6 +4,5 @@ export interface Ship {
     height: number;
     src: string;
     barsCount: number;
-    bottomIndent?: number;
     orientation?: 'horizontal' | 'vertical';
 }

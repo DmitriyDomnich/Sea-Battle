@@ -118,9 +118,6 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
         viewContainerRef.createComponent(FieldBarComponent);
       } else {
         const img = this._fieldChangerService.getImageNode(barConfig);
-        if (barConfig.oriantation === 'horizontal') {
-          img.style.transform = 'rotate(-90deg)';
-        }
         viewContainerRef.createComponent(FieldBarComponent, {
           projectableNodes: [[img]]
         });

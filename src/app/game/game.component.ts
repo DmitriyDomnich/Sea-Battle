@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import { FieldChangerService } from './field-changer.service';
 import { GameOverDialogComponent } from './game-over-dialog/game-over-dialog.component';
 import { GameStateService } from '../core/game-state.service';
 import { TurnHandlerService } from './turn-handler.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 export interface FieldConfig {
   isBusy: boolean,
@@ -23,12 +24,34 @@ export interface FieldConfig {
   selector: 'sea-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
+  animations: [
+    trigger('movePlayerField', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(-50%)'
+        }),
+        animate('400ms ease-in', style({
+          transform: 'translateX(0)'
+        }))
+      ])
+    ]),
+    trigger('moveEnemyField', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(50%)'
+        }),
+        animate('400ms ease-in', style({
+          transform: 'translateX(0)'
+        }))
+      ]),
+    ])
+  ],
 })
 export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChildren(AdBarsDirective) adBars: QueryList<AdBarsDirective>;
-  @ViewChild('player') playerField: any;
-  @ViewChild('enemy') enemyField: any;
+  @ViewChild('player', { read: ElementRef }) playerField: any;
+  @ViewChild('enemy', { read: ElementRef }) enemyField: any;
   private _joinGame$: Observable<any>;
   private _shipClickedSubs: Subscription[] = [];
   private _runningGameSub: Subscription;
@@ -84,8 +107,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
       this._runningGameSub = this._joinGame$.subscribe(data => {
         this._instantiateFields();
         this._gameStateService.isYourTurn = data.isYourTurn;
-        this._fieldChangerService.addCrossesAndWavesToField(data.enemyField, this.enemyField.elementRef.nativeElement);
-        this._fieldChangerService.addCrossesAndWavesToField(data.playerField, this.playerField.elementRef.nativeElement);
+        this._fieldChangerService.addCrossesAndWavesToField(data.enemyField, this.enemyField.nativeElement);
+        this._fieldChangerService.addCrossesAndWavesToField(data.playerField, this.playerField.nativeElement);
         this._fieldChangerService.addFullyShotShipsToEnemyField();
       })
     } else {
@@ -104,8 +127,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     this._turnHandlerService.resetTimer();
   }
   private _instantiateFields() {
-    this._fieldChangerService.enemyFieldRef = this.enemyField.elementRef.nativeElement;
-    this._fieldChangerService.playerFieldRef = this.playerField.elementRef.nativeElement;
+    this._fieldChangerService.enemyFieldRef = this.enemyField.nativeElement;
+    this._fieldChangerService.playerFieldRef = this.playerField.nativeElement;
     this._loadPlayerFieldComponents(this.adBars.first.viewContainerRef);
     this._loadEnemyFieldComponents(this.adBars.last.viewContainerRef);
   }
@@ -138,7 +161,7 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
               this._fieldChangerService.prependImageToEnemyField(barConfig);
             }
           })
-        ).subscribe(_ => this._gameStateService.isGameOver(this.enemyField.elementRef.nativeElement, '_enemyFieldConfig')));
+        ).subscribe(_ => this._gameStateService.isGameOver(this.enemyField.nativeElement, '_enemyFieldConfig')));
       }
     }
   }

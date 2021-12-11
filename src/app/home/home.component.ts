@@ -5,11 +5,25 @@ import { from, Subscription } from 'rxjs';
 import { v4 as createCode } from 'uuid';
 import { SocketIoService } from '../core/socket-io.service';
 import { GameStateService } from '../core/game-state.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [
+    trigger('showButton', [
+      transition(':enter', [
+        style({
+          opacity: 0
+        }),
+        animate('500ms ease-in', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-out', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class HomeComponent implements OnInit, OnDestroy {
 

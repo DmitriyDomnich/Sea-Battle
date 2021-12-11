@@ -1,7 +1,7 @@
 <sea-go-back></sea-go-back>
 <sea-turn-device></sea-turn-device>
 <div id="flex-container" cdkDropListGroup>
-    <div class="configuration-wrapper">
+    <div class="configuration-wrapper" @moveInventory>
         <div class="wrapper" #wrapper cdkDropList cdkDropListSortingDisabled>
             <ng-container *ngFor='let ship of ships'>
                 <sea-ship (shipFlipped)='flipped($event)' (cdkDragDropped)='dragDrop($event)' [shipConfig]='ship'
@@ -16,7 +16,7 @@
             <mat-icon>videogame_asset</mat-icon> Start a game
         </button>
     </div>
-    <sea-field #field>
+    <sea-field #field @moveField>
         <ng-container *ngFor='let bar of bars'>
             <sea-field-bar [cdkDropListEnterPredicate]='canBePlaced' (cdkDragStarted)='dragStart($event)' cdkDropList
                 (cdkDropListDropped)='drop($event)'></sea-field-bar>

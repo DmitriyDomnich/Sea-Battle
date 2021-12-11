@@ -6,8 +6,7 @@
             <mat-label>Enter a game link here (8 symbols)</mat-label>
             <input [maxLength]="36" #codeInput autocomplete="off" matInput>
         </mat-form-field>
-        <button *ngIf="codeInput.value.length === 8 || codeInput.value.length === 16"
-            [@buttonAppear]='showButton ? "appeared" : "disappeared"' (click)='joinExistingGame(codeInput.value)'
-            mat-flat-button color='accent'>Join a game</button>
+        <button *ngIf="codeInput.value.length === 8 || codeInput.value.length === 15" @showButton
+            (click)='joinExistingGame(codeInput.value)' mat-flat-button color='accent'>Join a game</button>
     </div>
 </div>

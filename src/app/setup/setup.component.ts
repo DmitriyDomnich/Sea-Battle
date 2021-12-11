@@ -1,17 +1,39 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketIoService } from '../core/socket-io.service';
 import { GameStateService } from '../core/game-state.service';
 import { Ship } from '../models/ship';
 import { FieldInstallerService } from './field-installer.service';
 import { Subscription } from 'rxjs';
-import { ShipComponent } from './ship/ship.component';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-setup',
   templateUrl: './setup.component.html',
   styleUrls: ['./setup.component.scss'],
+  animations: [
+    trigger('moveInventory', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(-50%)'
+        }),
+        animate('600ms ease-in-out', style({
+          transform: 'translateX(0)'
+        }))
+      ])
+    ]),
+    trigger('moveField', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(50%)'
+        }),
+        animate('600ms ease-in-out', style({
+          transform: 'translateX(0)'
+        }))
+      ]),
+    ])
+  ],
   providers: [FieldInstallerService]
 })
 export class SetupComponent implements OnInit, AfterViewInit, OnDestroy {

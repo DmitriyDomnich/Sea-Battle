@@ -5,13 +5,13 @@
         <span class="player-turn">It's your turn.</span>
     </ng-container>
     <sea-turn-timer></sea-turn-timer>
-    <sea-field #player>
+    <sea-field #player @movePlayerField>
         <ng-template adBars></ng-template>
     </sea-field>
     <ng-container *ngIf="!isYourTurn">
         <span class="enemy-turn">It's enemy's turn.</span>
     </ng-container>
-    <sea-field #enemy>
+    <sea-field #enemy @moveEnemyField>
         <ng-template adBars></ng-template>
     </sea-field>
 </div>

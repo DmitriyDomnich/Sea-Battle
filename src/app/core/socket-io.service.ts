@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { fromEvent, Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 import { FieldChangerService } from '../game/field-changer.service';
 import { GameStateService } from './game-state.service';
 
@@ -28,7 +29,7 @@ export class SocketIoService {
     return this._socket.connected;
   }
   public registerSocketIoConnection() {
-    this._socket = io('http://localhost:3000');
+    this._socket = io(environment.serverURL);
     this.connectionSuccess$ = fromEvent(this._socket, 'connect');
     this.connectionError$ = fromEvent(this._socket, 'connect_error');
 

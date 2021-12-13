@@ -1,12 +1,13 @@
 <div id="container">
     <h2>Simply create a new game or join an existing one</h2>
     <div class="buttons">
-        <button (click)='startNewGame()' mat-flat-button color='primary'>Create a new game</button>
+        <button [disabled]="disabledUi" (click)='startNewGame()' mat-flat-button color='primary'>Create a new
+            game</button>
         <mat-form-field>
             <mat-label>Enter a game link here (8 symbols)</mat-label>
-            <input [maxLength]="36" #codeInput autocomplete="off" matInput>
+            <input [disabled]="disabledUi" [maxLength]="36" #codeInput autocomplete="off" matInput>
         </mat-form-field>
-        <button *ngIf="codeInput.value.length === 8 || codeInput.value.length === 15" @showButton
-            (click)='joinExistingGame(codeInput.value)' mat-flat-button color='accent'>Join a game</button>
+        <button [disabled]="disabledUi" *ngIf="codeInput.value.length === 8 || codeInput.value.length === 15"
+            @showButton (click)='joinExistingGame(codeInput.value)' mat-flat-button color='accent'>Join a game</button>
     </div>
 </div>

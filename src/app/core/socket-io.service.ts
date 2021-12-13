@@ -17,23 +17,21 @@ export class SocketIoService {
   public joinRunningGame$: Observable<any>;
   public enemyLeftGame$: Observable<void>;
   public enemyJoinedGame$ = new Subject();
+  public connectionError$: Observable<any>;
+  public connectionSuccess$: Observable<any>;
 
   constructor(
     private _gameState: GameStateService,
     private _router: Router,
     private _fieldChangerService: FieldChangerService) { }
-  public checkSocket() {
-    if (this._socket) {
-      return true;
-    }
-    return false;
+  public checkSocketConnection() {
+    return this._socket.connected;
   }
   public registerSocketIoConnection() {
     this._socket = io('http://localhost:3000');
-    // this._socket.on('connect_error', (err) => {
-    //   console.log(err);
+    this.connectionSuccess$ = fromEvent(this._socket, 'connect');
+    this.connectionError$ = fromEvent(this._socket, 'connect_error');
 
-    // })
     this._socket.on('roomConnected', () => {
       this._joinRoom.next(1);
     });

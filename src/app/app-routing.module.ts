@@ -5,7 +5,6 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/home' },
   { path: 'game', loadChildren: () => import('./game/game.module').then(m => m.GameModule) },
   { path: 'setup', loadChildren: () => import('./setup/setup.module').then(m => m.SetupModule) },
-  { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({

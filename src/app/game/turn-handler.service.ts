@@ -6,7 +6,7 @@ import { Observable, Subject, Subscription, timer } from 'rxjs';
 })
 export class TurnHandlerService {
 
-  private _timer: Observable<number> = timer(5000);
+  private _timer: Observable<number> = timer(15000);
   private _timerSubscription: Subscription;
   public turnChange$ = new Subject();
 
@@ -14,7 +14,6 @@ export class TurnHandlerService {
   ) { }
   startTimer() {
     this._timerSubscription = this._timer.subscribe(_ => {
-      console.log('ход кончився');
       this.turnChange$.next();
     });
   }

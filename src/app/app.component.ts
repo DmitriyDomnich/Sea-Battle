@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, skip } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { SocketIoService } from './core/socket-io.service';
 
 @Component({

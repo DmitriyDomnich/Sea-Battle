@@ -11,7 +11,7 @@ import { TurnHandlerService } from '../turn-handler.service';
   styleUrls: ['./turn-timer.component.scss']
 })
 export class TurnTimerComponent implements OnInit, OnDestroy {
-  seconds: number = 5;
+  seconds: number = 15;
   interval = interval(1000);
   private _intervalSubscription: Subscription;
   private _turnChangeSubscription: Subscription;
@@ -27,13 +27,8 @@ export class TurnTimerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._enemyReturnedSubscription = this._socketService.enemyJoinedGame$.subscribe(_ => {
-      // if (this._intervalSubscription) {
-      //   // console.log('unsubbing');
-      //   this._intervalSubscription.unsubscribe();
-      //   this._turnChangeService.resetTimer();
-      // }
       this._turnChangeService.startTimer();
-      this._resetSubscription(5);
+      this._resetSubscription(15);
     });
     this._gameStoppedSubscription = this._socketService.enemyLeftGame$.subscribe(_ => {
       this._snackBar.open('Enemy left the game.', '', {
@@ -49,7 +44,7 @@ export class TurnTimerComponent implements OnInit, OnDestroy {
       if (this._intervalSubscription) {
         this._intervalSubscription.unsubscribe();
       }
-      this._resetSubscription(5);
+      this._resetSubscription(15);
     });
   }
   ngOnDestroy() {

@@ -4,6 +4,7 @@ import { GameComponent } from './game.component';
 import { JoinGameGuard } from './join-game.guard';
 
 const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: '/home' },
   { path: ':id', component: GameComponent, canActivate: [JoinGameGuard] }
 ];
 

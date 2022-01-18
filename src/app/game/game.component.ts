@@ -65,7 +65,8 @@ export class GameComponent implements OnInit, AfterViewInit, OnDestroy {
     private _turnHandlerService: TurnHandlerService,
     private _socketService: SocketIoService,
     private _dialog: MatDialog,
-    private _router: Router) {
+    private _router: Router
+  ) {
     this.isYourTurn = _gameStateService.isYourTurn;
   }
   ngOnInit() {

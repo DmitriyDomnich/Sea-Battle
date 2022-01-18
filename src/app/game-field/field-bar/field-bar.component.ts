@@ -3,6 +3,7 @@ import { SocketIoService } from 'src/app/core/socket-io.service';
 import { FieldChangerService } from 'src/app/game/field-changer.service';
 import { GameStateService } from 'src/app/core/game-state.service';
 import { Subscription } from 'rxjs';
+import { Howl } from 'howler';
 
 @Component({
   selector: 'sea-field-bar',
@@ -22,10 +23,20 @@ export class FieldBarComponent implements OnInit, OnDestroy {
     if (!this._clicked && (this.data || this.data === null)
       && this._gameStateService.isYourTurn && !this._el.nativeElement.children.length && this._canPress) {
       if (this.data?.isBusy) {
+        new Howl({
+          autoplay: true,
+          src: Math.random() >= 0.5 ? '../../assets/sounds/ship-shot1.mp3' : '../../assets/sounds/ship-shot2.mp3',
+          volume: 0.5
+        });
         this._gameStateService.isYourTurn = true;
         this._fieldChangerService.shootEnemyShip(this._index);
         this._socketService.shootEnemyShip(this._index);
       } else {
+        new Howl({
+          src: Math.random() >= 0.5 ? '../../assets/sounds/water-drop1.mp3' : '../../assets/sounds/water-drop2.mp3',
+          autoplay: true,
+          volume: 0.5
+        });
         this._gameStateService.isYourTurn = false;
         this._fieldChangerService.shootEnemyNothing(this._index);
         this._socketService.shootEnemyNothing(this._index);

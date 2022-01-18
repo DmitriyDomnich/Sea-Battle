@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Howl } from 'howler';
 import { fromEvent, Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -66,11 +67,21 @@ export class SocketIoService {
   }
   public registerGameEvents() {
     this._socket.on('player-ship-shot', (index) => {
+      new Howl({
+        src: Math.random() >= 0.5 ? '../../assets/sounds/ship-shot1.mp3' : '../../assets/sounds/ship-shot2.mp3',
+        autoplay: true,
+        volume: 0.5
+      });
       this._gameState.isYourTurn = false;
       this._fieldChangerService.playerShipShot(index);
       this._gameState.isGameOver(this._fieldChangerService.playerFieldRef, '_playerFieldConfig');
     });
     this._socket.on('player-nothing-shot', (index) => {
+      new Howl({
+        src: Math.random() >= 0.5 ? '../../assets/sounds/water-drop1.mp3' : '../../assets/sounds/water-drop2.mp3',
+        autoplay: true,
+        volume: 0.5
+      });
       this._fieldChangerService.playerNothingShot(index);
       this._gameState.isYourTurn = true;
     });
